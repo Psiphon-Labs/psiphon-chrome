@@ -1,0 +1,7 @@
+*.swo
+*.swp
+
+host/embedded_values.go
+
+host/psiphon-native-messaging-host
+host/psiphon-native-messaging-host.exe

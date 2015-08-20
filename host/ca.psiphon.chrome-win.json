@@ -1,0 +1,9 @@
+{
+  "name": "ca.psiphon.chrome",
+  "description": "Psiphon Censorship Circumvention System",
+  "path": "psiphon-native-messaging-host.exe",
+  "type": "stdio",
+  "allowed_origins": [
+    "chrome-extension://knldjmfmopnpolahpmmgbagdohdnhkik/"
+  ]
+}
