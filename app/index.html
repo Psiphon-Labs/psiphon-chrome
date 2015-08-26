@@ -1,12 +1,14 @@
+<!DOCTYPE html>
 <html>
   <head>
-    <script src="./main.js"></script>
+    <title>Psiphon</title>
   </head>
   <body>
     <h2>Psiphon</h2>
     <div id="controls">
       <button id="connect-button">Connect</button>
       <button id="disconnect-button" disabled>Disconnect</button>
+      <button id="settings-button" >Open Settings</button>
       <button id="force-system-proxy-button">Force Chrome back to system proxy</button>
     </div>
     <div id="status" style="height: 15%;">
@@ -24,5 +26,7 @@
     </div>
     <hr/>
     <div style="border: 1px solid black; margin-top: 1em; margin-bottom: 1em; overflow: scroll; max-height: 60%;" id="response"></div>
+
+    <script src="main.js"></script>
   </body>
 </html>

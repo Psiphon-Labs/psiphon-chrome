@@ -1,19 +1,31 @@
 {
-  // Extension ID: knldjmfmopnpolahpmmgbagdohdnhkik
-  "key": "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDcBHwzDvyBQ6bDppkIs9MP4ksKqCMyXQ/A52JivHZKh4YO/9vJsT3oaYhSpDCE9RPocOEQvwsHsFReW2nUEc6OLLyoCFFxIb7KkLGsmfakkut/fFdNJYh0xOTbSN8YvLWcqph09XAY2Y/f0AL7vfO1cuCqtkMt8hFrBGWxDdf9CQIDAQAB",
-  "name": "Psiphon",
-  "version": "0.0.1",
   "manifest_version": 2,
-  "description": "Psiphon",
-  "app": {
-    "launch": {
-      "local_path": "main.html"
+  "name": "Psiphon",
+  "short_name": "Psiphon",
+  "description": "Psiphon Circumvention System",
+  "version": "0.0.1",
+  "minimum_chrome_version": "40",
+  "background": {
+    "scripts": ["background.js"]
+  },
+  "browser_action": {
+    "default_icon": {
+      "19": "logos/psiphon-logo-bw-19.png",
+      "38": "logos/psiphon-logo-bw-38.png"
     }
   },
+  "options_ui": {
+    "page": "options/options.html",
+    "chrome_style": true
+  },
   "icons": {
-    "128": "psiphon-logo-128.png"
+    "16": "logos/psiphon-logo-16.png",
+    "48": "logos/psiphon-logo-48.png",
+    "128": "logos/psiphon-logo-128.png"
   },
   "permissions": [
+    "storage",
+    "tabs",
     "nativeMessaging",
     "proxy"
   ]

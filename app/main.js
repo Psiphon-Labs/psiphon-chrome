@@ -125,8 +125,9 @@
   function tunnelAvailable() {
     console.log('A tunnel is available, setting proxy');
 
-  proxySettings.set(connectionState.proxies.socks, ['localhost']);
+    proxySettings.set(connectionState.proxies.socks, ['localhost']);
     document.getElementById('ProxyStatus').innerHTML = '<span style="color: green;">In Use</span>';
+    chrome.browserAction.setIcon({path: 'logos/psiphon-logo-38.png'});
 
     if (connectionState.homepage.shown === false) {
       connectionState.homepage.shown = true;
@@ -141,12 +142,12 @@
 
     proxySettings.restoreInitial();
     document.getElementById('ProxyStatus').innerHTML = '<span style="color: red;">Not Used</span>';
+    chrome.browserAction.setIcon({path: 'logos/psiphon-logo-bw-38.png'});
   }
 
   document.addEventListener('DOMContentLoaded', function () {
     // Register an unload handler to cleanup when the tab is closing
     window.addEventListener('beforeunload', function (event) {
-      console.log('Extension unloaded, cleaning up');
       psiphon.disconnect();
       proxySettings.restoreInitial();
     });
@@ -166,6 +167,15 @@
     document.getElementById('connect-button').addEventListener('click', psiphon.connect);
     document.getElementById('disconnect-button').addEventListener('click', psiphon.disconnect);
     document.getElementById('force-system-proxy-button').addEventListener('click', proxySettings.forceToSystemProxy);
+    document.getElementById('settings-button').addEventListener('click', function () {
+      if (chrome.runtime.openOptionsPage) {
+        // chrome 42+ preferred
+        chrome.runtime.openOptionsPage();
+      } else {
+        // fallback
+        window.open(chrome.runtime.getURL('options/options.html'));
+      }
+    });
 
     document.getElementById('select-response-text').addEventListener('click', function() {
       var range = document.createRange();
