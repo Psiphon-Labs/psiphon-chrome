@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"runtime"
 	"sync"
 
 	"github.com/Psiphon-Labs/psiphon-tunnel-core/psiphon"
@@ -118,6 +119,14 @@ func runPsiphon() {
 	if err != nil {
 		psiphon.NoticeError("error processing configuration file: %s", err)
 		os.Exit(1)
+	}
+
+	// TODO: There is probably a much better way of doing this...
+	// The CWD of this file when launched by Chrome will be the Chrome install's directory
+	// As a non-administrative user, you cannot write files to this directory.
+	// No files means no sqlite db, and therefore no tunnel-core.
+	if runtime.GOOS == "windows" {
+		config.DataStoreDirectory = os.Getenv("APPDATA") + "\\PsiphonChrome"
 	}
 	// }}}
 

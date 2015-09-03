@@ -4,7 +4,7 @@
 
 FROM ubuntu:15.04
 
-ENV GOVERSION=go1.4.2
+ENV GOVERSION=go1.5
 
 # Install system-level dependencies.
 ENV DEBIAN_FRONTEND=noninteractive
@@ -23,9 +23,7 @@ RUN echo "INSTALLING GO" && \
 
 ENV CGO_ENABLED=1
 
-RUN go get github.com/mitchellh/gox && go get github.com/inconshreveable/gonative && go get github.com/pwaller/goupx
-
-RUN mkdir -p /usr/local/gonative && cd /usr/local/gonative && gonative build
+RUN go get github.com/mitchellh/gox && go get github.com/pwaller/goupx
 
 ENV PATH=/usr/local/gonative/go/bin:$PATH
 

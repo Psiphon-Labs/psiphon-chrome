@@ -5,6 +5,10 @@
 *.pem
 *.zip
 
+*.rpm
+*.deb
+*.exe
+
 host/bin
 host/embedded_values.go
 host/psiphon-native-messaging-host

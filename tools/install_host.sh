@@ -28,10 +28,11 @@ mkdir -p "$TARGET_DIR"
 # Copy native messaging host manifest.
 cp "$DIR/$HOST_NAME.json" "$TARGET_DIR"
 
+# Due to creating installable packages, the mainfest now uses a fixed path, and this code isn't needed
 # Update host path in the manifest.
-HOST_PATH=$DIR/$EXECUTABLE
-ESCAPED_HOST_PATH=${HOST_PATH////\\/}
-sed -i -e "s/HOST_PATH/$ESCAPED_HOST_PATH/" "$TARGET_DIR/$HOST_NAME.json"
+# HOST_PATH=$DIR/$EXECUTABLE
+# ESCAPED_HOST_PATH=${HOST_PATH////\\/}
+# sed -i -e "s/HOST_PATH/$ESCAPED_HOST_PATH/" "$TARGET_DIR/$HOST_NAME.json"
 
 # Set permissions for the manifest so that all users can read it.
 chmod a+r "$TARGET_DIR/$HOST_NAME.json"

@@ -14,35 +14,48 @@ CGO_ENABLED=1
 echo -e "go-getting dependencies...\n"
 GOOS=linux go get -d -v ./...
 GOOS=windows go get -d -v ./...
+GOOS=darwin go get -d -v ./...
 
 EXE_BASENAME="psiphon-native-messaging-host"
 BUILDDATE=$(date --iso-8601=seconds)
-#BUILDREPO=$(git config --get remote.origin.url)
-#BUILDREV=$(git rev-parse HEAD)
-BUILDREPO="dev_build"
-BUILDREV="Experimental_Dev_Build"
+BUILDREPO=$(git config --get remote.origin.url)
+BUILDREV=$(git rev-parse HEAD)
+
 LDFLAGS="\
--X github.com/Psiphon-Labs/psiphon-tunnel-core/psiphon.buildDate $BUILDDATE \
--X github.com/Psiphon-Labs/psiphon-tunnel-core/psiphon.buildRepo $BUILDREPO \
--X github.com/Psiphon-Labs/psiphon-tunnel-core/psiphon.buildRev $BUILDREV \
+-X github.com/Psiphon-Labs/psiphon-tunnel-core/psiphon.buildDate=$BUILDDATE \
+-X github.com/Psiphon-Labs/psiphon-tunnel-core/psiphon.buildRepo=$BUILDREPO \
+-X github.com/Psiphon-Labs/psiphon-tunnel-core/psiphon.buildRev=$BUILDREV \
 "
 echo -e "LDFLAGS=$LDFLAGS\n"
 
-echo -e "\nBuilding windows-386..."
+if [ ! -d bin ]; then
+  mkdir bin
+  mkdir bin/windows
+  mkdir bin/linux
+  mkdir bin/darwin
+fi
+
+echo -e "\nBuilding windows-i686..."
 CC=/usr/bin/i686-w64-mingw32-gcc \
-  gox -verbose -ldflags "$LDFLAGS" -osarch windows/386 -output ${EXE_BASENAME}
-upx --best ${EXE_BASENAME}.exe
+  gox -verbose -ldflags "$LDFLAGS" -osarch windows/386 -output bin/windows/${EXE_BASENAME}-i686
+upx --best bin/windows/${EXE_BASENAME}-i686.exe
 
-#echo -e "\nBuilding windows-amd64..."
-#CC=/usr/bin/x86_64-w64-mingw32-gcc \
-#  gox -verbose -ldflags "$LDFLAGS" -osarch windows/amd64 -output windows_amd64_${EXE_BASENAME}
-#upx --best windows_amd64_${EXE_BASENAME}.exe
+echo -e "\nBuilding windows-x86_64"
+CC=/usr/bin/x86_64-w64-mingw32-gcc \
+  gox -verbose -ldflags "$LDFLAGS" -osarch windows/amd64 -output bin/windows/${EXE_BASENAME}-x86_64
+upx --best bin/windows/${EXE_BASENAME}-x86_64.exe
 
-#echo -e "\nBuilding linux-amd64..."
-#gox -verbose -ldflags "$LDFLAGS" -osarch linux/amd64 -output linux_amd64_${EXE_BASENAME}
-#goupx --best linux_amd64_${EXE_BASENAME}
-
-echo -e "\nBuilding linux-386..."
+echo -e "\nBuilding linux-i686..."
 CFLAGS=-m32 \
-  gox -verbose -ldflags "$LDFLAGS" -osarch linux/386 -output ${EXE_BASENAME}
-goupx --best ${EXE_BASENAME}
+  gox -verbose -ldflags "$LDFLAGS" -osarch linux/386 -output bin/linux/${EXE_BASENAME}-i686
+goupx --best bin/linux/${EXE_BASENAME}-i686
+
+echo -e "\nBuilding linux-x86_64..."
+  gox -verbose -ldflags "$LDFLAGS" -osarch linux/amd64 -output bin/linux/${EXE_BASENAME}-x86_64
+goupx --best bin/linux/${EXE_BASENAME}-x86_64
+
+CGO_ENABLED=0
+echo -e "\nbuilding darwin-x86_64..."
+  gox -verbose -ldflags "$LDFLAGS" -osarch darwin/amd64 -output bin/darwin/${EXE_BASENAME}-x86_64
+# It doesn't seem as though Darwin binaries can be UPX'ed in this way?
+#upx --best bin/darwin/${EXE_BASENAME}-x86_64
