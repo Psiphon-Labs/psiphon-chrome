@@ -13,7 +13,7 @@ In order to use this app you must:
 ###To install:
 ####Create the installer:
 #####On Windows:
- - Install [http://nsis.sourceforge.net/Main_Page](NSIS)
+ - Install [NSIS](http://nsis.sourceforge.net/Main_Page)
  - Right-Click on `nsis-generate` in `tools/nsis` and click "Compile NSIS Script" from the context menu
  - This will create `psiphon-chrome-installer.exe` in the current directory
 
@@ -23,4 +23,5 @@ In order to use this app you must:
  - This will create 2 `.rpm` packages and 2 `.deb` pacakges (one each for 32 and 64 bit architectures)
 
 Successful *installation* will install both the native messaging host binary, as well as the matched Chrome extension (you may need to restart Chrome)
+
 Successful *uninstallation* will remove both the native messaging host binary, as well as the matched Chrome extension (you may need to restart Chrome)
