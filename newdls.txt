@@ -1,3 +1,0 @@
-http://downloads.sourceforge.net/project/nsis/NSIS%202/2.46/nsis-2.46-src.tar.bz2?r=http%3A%2F%2Fsourceforge.net%2Fprojects%2Fnsis%2F%3Fsource%3Dtyp_redirect&ts=1441566601&use_mirror=iweb
-http://downloads.sourceforge.net/project/nsis/NSIS%203%20Pre-release/3.0b2/nsis-3.0b2.zip?r=http%3A%2F%2Fsourceforge.net%2Fprojects%2Fnsis%2Ffiles%2FNSIS%25203%2520Pre-release%2F3.0b2%2F&ts=1441568847&use_mirror=skylineservers
-http://zlib.net/zlib128-dll.zip
