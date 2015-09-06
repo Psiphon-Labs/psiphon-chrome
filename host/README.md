@@ -20,3 +20,8 @@ When that command completes, the compiled binaries will be located in the curren
  - `psiphon-native-messaging-host` (for Linux)
 
 If attempting to install the extension along with the now built native messaging host, return to the instructions in the [main README](../README.md))
+
+### Configuration
+In order to configure the build, copy `embedded_values.go.stub` to `embedded_values.go` and fill in the appropriate data (requires a Psiphon-like network)
+ - Of particular note, ensure that the DataStoreDirectory is set to a path that is readable and writable by the user that will be using the software.
+   - On Windows, this defaults to `%APPDATA%\PsiphonChrome`

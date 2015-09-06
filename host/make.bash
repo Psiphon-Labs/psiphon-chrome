@@ -40,22 +40,22 @@ CC=/usr/bin/i686-w64-mingw32-gcc \
   gox -verbose -ldflags "$LDFLAGS" -osarch windows/386 -output bin/windows/${EXE_BASENAME}-i686
 upx --best bin/windows/${EXE_BASENAME}-i686.exe
 
-echo -e "\nBuilding windows-x86_64"
-CC=/usr/bin/x86_64-w64-mingw32-gcc \
-  gox -verbose -ldflags "$LDFLAGS" -osarch windows/amd64 -output bin/windows/${EXE_BASENAME}-x86_64
-upx --best bin/windows/${EXE_BASENAME}-x86_64.exe
+echo -e "\nNot Building windows-x86_64"
+#CC=/usr/bin/x86_64-w64-mingw32-gcc \
+#  gox -verbose -ldflags "$LDFLAGS" -osarch windows/amd64 -output bin/windows/${EXE_BASENAME}-x86_64
+#upx --best bin/windows/${EXE_BASENAME}-x86_64.exe
 
 echo -e "\nBuilding linux-i686..."
 CFLAGS=-m32 \
   gox -verbose -ldflags "$LDFLAGS" -osarch linux/386 -output bin/linux/${EXE_BASENAME}-i686
 goupx --best bin/linux/${EXE_BASENAME}-i686
 
-echo -e "\nBuilding linux-x86_64..."
-  gox -verbose -ldflags "$LDFLAGS" -osarch linux/amd64 -output bin/linux/${EXE_BASENAME}-x86_64
-goupx --best bin/linux/${EXE_BASENAME}-x86_64
+echo -e "\nNot Building linux-x86_64..."
+#  gox -verbose -ldflags "$LDFLAGS" -osarch linux/amd64 -output bin/linux/${EXE_BASENAME}-x86_64
+#goupx --best bin/linux/${EXE_BASENAME}-x86_64
 
 CGO_ENABLED=0
-echo -e "\nbuilding darwin-x86_64..."
+echo -e "\nBuilding darwin-x86_64..."
   gox -verbose -ldflags "$LDFLAGS" -osarch darwin/amd64 -output bin/darwin/${EXE_BASENAME}-x86_64
 # It doesn't seem as though Darwin binaries can be UPX'ed in this way?
 #upx --best bin/darwin/${EXE_BASENAME}-x86_64

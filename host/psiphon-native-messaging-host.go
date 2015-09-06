@@ -127,6 +127,8 @@ func runPsiphon() {
 	// No files means no sqlite db, and therefore no tunnel-core.
 	if runtime.GOOS == "windows" {
 		config.DataStoreDirectory = os.Getenv("APPDATA") + "\\PsiphonChrome"
+	} else {
+		config.DataStoreDirectory = "/opt/PsiphonChrome"
 	}
 	// }}}
 

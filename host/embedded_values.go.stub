@@ -6,6 +6,7 @@ var PSIPHON_CONFIG = []byte(`{
 	"RemoteServerListUrl" : "https://s3.amazonaws.com/invalid_bucket_name/server_list",
 	"RemoteServerListSignaturePublicKey" : "",
 	"LogFilename" : "",
+  "DataStoreDirectory": "",
 	"DataStoreFilename" : "",
 	"LocalHttpProxyPort" : 0,
 	"LocalSocksProxyPort" : 0,

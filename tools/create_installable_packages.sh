@@ -26,32 +26,32 @@ create_postinstall_script () {
 chmod -R a+rx /opt/PsiphonChrome
 
 if [ $(uname -s) == "Linux" ]; then
-  if [ ! -d ~/.config/google-chrome/NativeMessagingHosts ]; then
-    mkdir -p ~/.config/google-chrome/NativeMessagingHosts
-  fi
-  if [ ! -d /opt/google/chrome/extensions ]; then
-    mkdir -p /opt/google/chrome/extensions
-  fi
-
-  cp /opt/PsiphonChrome/$MANIFEST_FILE ~/.config/google-chrome/NativeMessagingHosts/$MANIFEST_FILE
-  cp /opt/PsiphonChrome/${EXTENSION_ID}.json /opt/google/chrome/extensions/${EXTENSION_ID}.json
+  MANIFEST_DESTINATION=~/.config/google-chrome/NativeMessagingHosts
+  UPDATE_FILE_DESTINATION=/opt/google/chrome/extensions
 elif [ $(uname -s) == "Darwin" ]; then
-  if [ ! -d ~/Library/Application\ Support/Google/Chrome/NativeMessagingHosts ]; then
-    mkdir -p ~/Library/Application\ Support/Google/Chrome/NativeMessagingHosts
-  fi
-  if [ ! -d ~/Library/Application\ Support/Google/Chrome/External\ Extensions ]; then
-    mkdir -p ~/Library/Application\ Support/Google/Chrome/External\ Extensions
-  fi
-
-  cp /opt/PsiphonChrome/$MANIFEST_FILE ~/Library/Application\ Support/Google/Chrome/NativeMessagingHosts/$MANIFEST_FILE
-  cp /opt/PsiphonChrome/${EXTENSION_ID}.json ~/Library/Application\ Support/Google/Chrome/External\ Extensions/${EXTENSION_ID}.json
+  MANIFEST_DESTINATION=~/Library/Application\ Support/Google/Chrome/NativeMessagingHosts/$MANIFEST_FILE
+  UPDATE_FILE_DESTINATION=~/Library/Application\ Support/Google/Chrome/External\ Extensions/${EXTENSION_ID}.json
 fi
+
+if [ ! -d $MANIFEST_DESTINATION ]; then
+  mkdir -p $MANIFEST_DESTINATION
+fi
+cp /opt/PsiphonChrome/$MANIFEST_FILE $MANIFEST_DESTINATION
+
+if [ ! -d $UPDATE_FILE_DESTINATION ]; then
+  mkdir -p $UPDATE_FILE_DESTINATION
+fi
+cp /opt/PsiphonChrome/${EXTENSION_ID}.json $UPDATE_FILE_DESTINATION
+
+chown -R $USER $MANIFEST_DESTINATION
+chown -R $USER $UPDATE_FILE_DESTINATION
 
 EOF
 }
 
 package_for_linux () {
-  BUILD_ARCHITECHTURES=( "x86_64" "i686" )
+  #BUILD_ARCHITECHTURES=( "x86_64" "i686" )
+  BUILD_ARCHITECHTURES=( "i686" )
   BUILD_TARGETS=( "deb" "rpm" )
 
   for ARCH in "${BUILD_ARCHITECHTURES[@]}"; do
