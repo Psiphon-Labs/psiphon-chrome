@@ -8,7 +8,7 @@ VERSION="0.0.1"
 VENDOR="Psiphon Inc."
 MAINTAINER="Psiphon Inc. <info@psiphon.ca>"
 URL="https://psiphon3.com"
-DESCRIPTION="Chrome Native Messaging Host and Extension for using the Psiphon Circumvention System from within the browser\n"
+DESCRIPTION="Chrome Native Messaging Host and Extension for using the Psiphon Circumvention System from within the browser"
 EXTENSION_ID="gnalljkfdmkhinjcipgjjehclbpagega"
 
 MANIFEST_FILE="ca.psiphon.chrome.json"
@@ -20,31 +20,50 @@ create_external_install_preferences () {
 EOF
 }
 
-create_postinstall_script () {
-  cat << EOF > /tmp/post_install.sh
+create_after_install () {
+  cat << EOF > /tmp/after_install.sh
 #!/bin/bash
 chmod -R a+rx /opt/PsiphonChrome
 
-if [ $(uname -s) == "Linux" ]; then
-  MANIFEST_DESTINATION=~/.config/google-chrome/NativeMessagingHosts
+if [ \$(uname -s) = "Linux" ]; then
+  MANIFEST_DESTINATION=\$HOME/.config/google-chrome/NativeMessagingHosts
   UPDATE_FILE_DESTINATION=/opt/google/chrome/extensions
-elif [ $(uname -s) == "Darwin" ]; then
-  MANIFEST_DESTINATION=~/Library/Application\ Support/Google/Chrome/NativeMessagingHosts/$MANIFEST_FILE
-  UPDATE_FILE_DESTINATION=~/Library/Application\ Support/Google/Chrome/External\ Extensions/${EXTENSION_ID}.json
+elif [ \$(uname -s) = "Darwin" ]; then
+  MANIFEST_DESTINATION="\${HOME}/Library/Application Support/Google/Chrome/NativeMessagingHosts"
+  UPDATE_FILE_DESTINATION="\${HOME}/Library/Application Support/Google/Chrome/External Extensions"
 fi
 
-if [ ! -d $MANIFEST_DESTINATION ]; then
-  mkdir -p $MANIFEST_DESTINATION
+if [ ! -d "\${MANIFEST_DESTINATION}" ]; then
+  mkdir -p "\${MANIFEST_DESTINATION}"
 fi
-cp /opt/PsiphonChrome/$MANIFEST_FILE $MANIFEST_DESTINATION
+cp /opt/PsiphonChrome/$MANIFEST_FILE "\${MANIFEST_DESTINATION}"
 
-if [ ! -d $UPDATE_FILE_DESTINATION ]; then
-  mkdir -p $UPDATE_FILE_DESTINATION
+if [ ! -d "\${UPDATE_FILE_DESTINATION}" ]; then
+  mkdir -p "\${UPDATE_FILE_DESTINATION}"
 fi
-cp /opt/PsiphonChrome/${EXTENSION_ID}.json $UPDATE_FILE_DESTINATION
+cp /opt/PsiphonChrome/${EXTENSION_ID}.json "\${UPDATE_FILE_DESTINATION}"
 
-chown -R $USER $MANIFEST_DESTINATION
-chown -R $USER $UPDATE_FILE_DESTINATION
+chown -R \$USER "\${MANIFEST_DESTINATION}"
+chown -R \$USER "\${UPDATE_FILE_DESTINATION}"
+
+EOF
+}
+
+create_after_remove () {
+  cat << EOF > /tmp/after_remove.sh
+#!/bin/bash
+
+if [ \$(uname -s) = "Linux" ]; then
+  MANIFEST_DESTINATION=\$HOME/.config/google-chrome/NativeMessagingHosts
+  UPDATE_FILE_DESTINATION=/opt/google/chrome/extensions
+elif [ \$(uname -s) = "Darwin" ]; then
+  MANIFEST_DESTINATION="\${HOME}/Library/Application Support/Google/Chrome/NativeMessagingHosts"
+  UPDATE_FILE_DESTINATION="\${HOME}/Library/Application Support/Google/Chrome/External Extensions"
+fi
+
+rm "\${MANIFEST_DESTINATION}/${MANIFEST_FILE}"
+rm "\${UPDATE_FILE_DESTINATION}/${EXTENSION_ID}.json"
+rm -rf /opt/PsiphonChrome
 
 EOF
 }
@@ -60,7 +79,8 @@ package_for_linux () {
       -s dir \
       -t $TARGET \
       -n $NAME \
-      --after-install /tmp/post_install.sh \
+      --after-install /tmp/after_install.sh \
+      --after-remove /tmp/after_remove.sh \
       --architecture $ARCH \
       --version $VERSION \
       --vendor "$VENDOR" \
@@ -75,11 +95,27 @@ package_for_linux () {
 }
 
 package_for_osx () {
+  # Create uninstall.pkg to clean everything up
+  fpm \
+  -s empty \
+  -t osxpkg \
+  -n $NAME-uninstall \
+  --osxpkg-identifier-prefix ca.psiphon \
+  --osxpkg-payload-free \
+  --before-install /tmp/after_remove.sh \
+  --version $VERSION \
+  --vendor "$VENDOR" \
+  --maintainer "$MAINTAINER" \
+  --url "$URL" \
+  --description "Uninstaller - ${DESCRIPTION}"
+
   fpm \
   -s dir \
   -t osxpkg \
   -n $NAME \
-  --after-install /tmp/post_install.sh \
+  --osxpkg-identifier-prefix ca.psiphon \
+  --no-osxpkg-payload-free \
+  --after-install /tmp/after_install.sh \
   --version $VERSION \
   --vendor "$VENDOR" \
   --maintainer "$MAINTAINER" \
@@ -87,29 +123,35 @@ package_for_osx () {
   --description "${DESCRIPTION}" \
   host/bin/darwin/$EXECUTABLE_NAME-x86_64=/opt/PsiphonChrome/$EXECUTABLE_NAME \
   host/$MANIFEST_FILE=/opt/PsiphonChrome/$MANIFEST_FILE \
-  /tmp/${EXTENSION_ID}.json=/opt/PsiphonChrome/${EXTENSION_ID}.json
+  /tmp/${EXTENSION_ID}.json=/opt/PsiphonChrome/${EXTENSION_ID}.json \
+  $NAME-uninstall-${VERSION}.pkg=/opt/PsiphonChrome/
+
+  # Uninstaller is packaged into installer and dropped in /opt/PsiphonChrome, remove this redundant one
+  rm $NAME-uninstall-${VERSION}.pkg
 }
 
 echo "Starting package creation at $(date)"
 
+echo "..Creating External Install Preferences JSON"
+create_external_install_preferences
+echo "..Creating post-installation script"
+create_after_install
+echo "..Creating post-uninstallation script"
+create_after_remove
+
+echo "Beginning targe selection"
 TARGET=$1
 case $TARGET in
   linux)
-    echo "..Target 'linux' selected. Packaging"
-    create_external_install_preferences
-    create_postinstall_script
-
+    echo "..'linux' selected. Packaging"
     package_for_linux
     ;;
   osx)
-    echo "..Target 'osx' selected. Packaging"
-    create_external_install_preferences
-    create_postinstall_script
-
+    echo "..'osx' selected. Packaging"
     package_for_osx
     ;;
   all)
-    echo "..Target 'all' selected. Packaging"
+    echo "..'all' selected. Packaging"
     echo "...Linux"
     package_for_linux
     echo "...OSX"

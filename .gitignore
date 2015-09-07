@@ -8,6 +8,7 @@
 *.rpm
 *.deb
 *.exe
+*.pkg
 
 host/bin
 host/embedded_values.go
