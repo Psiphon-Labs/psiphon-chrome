@@ -23,7 +23,7 @@ EOF
 create_after_install () {
   cat << EOF > /tmp/after_install.sh
 #!/bin/bash
-chmod -R a+rx /opt/PsiphonChrome
+chmod -R a+rwx /opt/PsiphonChrome
 
 if [ \$(uname -s) = "Linux" ]; then
   MANIFEST_DESTINATION=\$HOME/.config/google-chrome/NativeMessagingHosts
@@ -81,7 +81,7 @@ package_for_linux () {
       -n $NAME \
       --after-install /tmp/after_install.sh \
       --after-remove /tmp/after_remove.sh \
-      --architecture $ARCH \
+      --architecture all \
       --version $VERSION \
       --vendor "$VENDOR" \
       --maintainer "$MAINTAINER" \
@@ -139,7 +139,7 @@ create_after_install
 echo "..Creating post-uninstallation script"
 create_after_remove
 
-echo "Beginning targe selection"
+echo "Beginning target selection"
 TARGET=$1
 case $TARGET in
   linux)
@@ -162,5 +162,10 @@ case $TARGET in
     exit 1
     ;;
 esac
+
+echo "..Cleaning up temporary files packaged into installers"
+rm /tmp/${EXTENSION_ID}.json
+rm /tmp/after_install.sh
+rm /tmp/after_remove.sh
 
 echo "Ending package creation at $(date)"

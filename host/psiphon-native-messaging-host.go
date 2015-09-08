@@ -130,6 +130,7 @@ func runPsiphon() {
 	} else {
 		config.DataStoreDirectory = "/opt/PsiphonChrome"
 	}
+	psiphon.NoticeInfo("config.DataStoreDirectory = %s", config.DataStoreDirectory)
 	// }}}
 
 	// {{{ Initialize data store
