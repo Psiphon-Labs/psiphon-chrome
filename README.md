@@ -19,8 +19,14 @@ In order to use this app you must:
 
 #####On Linux:
  - Install the `fpm` ruby gem
- - Run the `create_installable_packages.sh` script in the `tools` directory
- - This will create 2 `.rpm` packages and 2 `.deb` pacakges (one each for 32 and 64 bit architectures)
+ - Run the `create_installable_packages.sh` script in the `tools` directory, passing `linux` as the first and only command line parameter
+ - This will create an `.rpm` packages and a `.deb` pacakge which can be installed/uninstalled as normal via `dpkg`/`yum`
+
+#####On OSX:
+- Install the `fpm` ruby gem
+ - Run the `create_installable_packages.sh` script in the `tools` directory, passing `osx` as the first and only command line parameter
+ - This will create a `.pkg` file which can be installed as normal
+ - This will also create an uninstaller `.pkg` file in `/opt/PsiphonChrome`
 
 Successful *installation* will install both the native messaging host binary, as well as the matched Chrome extension (you may need to restart Chrome)
 
