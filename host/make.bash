@@ -8,8 +8,6 @@ if [ ! -f make.bash ]; then
   exit 1
 fi
 
-CGO_ENABLED=1
-
 # Make sure we have our dependencies
 echo -e "go-getting dependencies...\n"
 GOOS=linux go get -d -v ./...
@@ -35,6 +33,8 @@ if [ ! -d bin ]; then
   mkdir bin/darwin
 fi
 
+# Windows requires CGO due to sqlite. OpenSSL will likely eventually require CGO everywhere
+CGO_ENABLED=1
 echo -e "\nBuilding windows-i686..."
 CC=/usr/bin/i686-w64-mingw32-gcc \
   gox -verbose -ldflags "$LDFLAGS" -osarch windows/386 -output bin/windows/${EXE_BASENAME}-i686
@@ -45,6 +45,7 @@ echo -e "\nNot Building windows-x86_64"
 #  gox -verbose -ldflags "$LDFLAGS" -osarch windows/amd64 -output bin/windows/${EXE_BASENAME}-x86_64
 #upx --best bin/windows/${EXE_BASENAME}-x86_64.exe
 
+CGO_ENABLED=0
 echo -e "\nBuilding linux-i686..."
 CFLAGS=-m32 \
   gox -verbose -ldflags "$LDFLAGS" -osarch linux/386 -output bin/linux/${EXE_BASENAME}-i686
@@ -54,7 +55,6 @@ echo -e "\nNot Building linux-x86_64..."
 #  gox -verbose -ldflags "$LDFLAGS" -osarch linux/amd64 -output bin/linux/${EXE_BASENAME}-x86_64
 #goupx --best bin/linux/${EXE_BASENAME}-x86_64
 
-CGO_ENABLED=0
 echo -e "\nBuilding darwin-x86_64..."
   gox -verbose -ldflags "$LDFLAGS" -osarch darwin/amd64 -output bin/darwin/${EXE_BASENAME}-x86_64
 # It doesn't seem as though Darwin binaries can be UPX'ed in this way?
