@@ -3,12 +3,14 @@
   "name": "Psiphon",
   "short_name": "Psiphon",
   "description": "Psiphon Circumvention System",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "minimum_chrome_version": "40",
   "background": {
     "scripts": ["background.js"]
   },
   "browser_action": {
+    "default_title": "Psiphon",
+    "default_popup": "popup.html",
     "default_icon": {
       "19": "logos/psiphon-logo-bw-19.png",
       "38": "logos/psiphon-logo-bw-38.png"
