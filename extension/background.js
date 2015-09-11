@@ -6,7 +6,7 @@ function logMessage (message) {
 }
 
 function viewLogs () {
-  chrome.tabs.create({'url': chrome.extension.getURL('logs.html')});
+  chrome.tabs.create({'url': chrome.extension.getURL('logs/logs.html')});
 }
 
 var nativeHost = null;
@@ -116,7 +116,7 @@ function tunnelAvailable() {
 
   proxySettings.set(connectionState.proxies.socks, ['localhost']);
   chrome.runtime.sendMessage({type: 'status', status: 'connected'});
-  chrome.browserAction.setIcon({path: 'logos/psiphon-logo-38.png'});
+  chrome.browserAction.setIcon({path: 'img/logos/38.png'});
 
   if (connectionState.homepage.url && connectionState.homepage.shown === false) {
     connectionState.homepage.shown = true;
@@ -131,7 +131,7 @@ function noTunnelAvailable() {
 
   proxySettings.restoreInitial();
   chrome.runtime.sendMessage({type: 'status', status: 'disconnected'});
-  chrome.browserAction.setIcon({path: 'logos/psiphon-logo-bw-38.png'});
+  chrome.browserAction.setIcon({path: 'img/logos/bw-38.png'});
 }
 
 // Store proxy settings prior to beginning managing them in the extension

@@ -10,10 +10,10 @@
   },
   "browser_action": {
     "default_title": "Psiphon",
-    "default_popup": "popup.html",
+    "default_popup": "popup/popup.html",
     "default_icon": {
-      "19": "logos/psiphon-logo-bw-19.png",
-      "38": "logos/psiphon-logo-bw-38.png"
+      "19": "img/logos/bw-19.png",
+      "38": "img/logos/bw-38.png"
     }
   },
   "options_ui": {
@@ -21,9 +21,9 @@
     "chrome_style": true
   },
   "icons": {
-    "16": "logos/psiphon-logo-16.png",
-    "48": "logos/psiphon-logo-48.png",
-    "128": "logos/psiphon-logo-128.png"
+    "16": "img/logos/16.png",
+    "48": "img/logos/48.png",
+    "128": "img/logos/128.png"
   },
   "permissions": [
     "storage",

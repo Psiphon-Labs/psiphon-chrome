@@ -2,14 +2,14 @@
 
 function isConnected() {
   logoStatus.element.src = logoStatus.connectedSource;
-  document.getElementById('connect-button').disabled = true;
-  document.getElementById('disconnect-button').disabled = false;
+  document.getElementById('connect-button').style.display = 'none';
+  document.getElementById('disconnect-button').style.display = 'initial';
 }
 
 function isDisconnected() {
   logoStatus.element.src = logoStatus.disconnectedSource;
-  document.getElementById('connect-button').disabled = false;
-  document.getElementById('disconnect-button').disabled = true;
+  document.getElementById('connect-button').style.display = 'initial';
+  document.getElementById('disconnect-button').style.display = 'none';
 }
 
 function uiStateFromBackgroundPage () {
@@ -23,8 +23,8 @@ function uiStateFromBackgroundPage () {
 var bgPage = chrome.extension.getBackgroundPage();
 var logoStatus = {
   element: null,
-  connectedSource: 'logos/psiphon-logo-128.png',
-  disconnectedSource: 'logos/psiphon-logo-bw-128.png'
+  connectedSource: '../img/logos/128.png',
+  disconnectedSource: '../img/logos/bw-128.png'
 };
 
 chrome.runtime.onMessage.addListener(function (message) {
