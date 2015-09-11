@@ -1,0 +1,57 @@
+body {
+  min-width: 200px;
+  background-color: #eeeeee;
+}
+
+#logo-status {
+  height: 128px;
+  width: 128px;
+  display: block;
+  margin: 0.5em auto;
+}
+
+#settings-button {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  font-size: 1.3em;
+  cursor: pointer;
+}
+
+.controls {
+  margin: 1.8em;
+  text-align: center;
+}
+
+.btn {
+  background-color: #16627f;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  border-radius: 5px;
+  display: inline-block;
+  cursor: pointer;
+  color: #eeeeee;
+  font-family: Arial;
+  font-size: 1.25em;
+  padding: 12px 30px;
+  text-decoration: none;
+  text-shadow: 0px 1px 0px #2f6627;
+}
+
+.btn:hover {
+  background-color: #bcdae4;
+}
+
+.btn:active {
+  position: relative;
+  top: 1px;
+}
+
+#connect-button {
+  background-color: #51a253;
+}
+
+#disconnect-button {
+  background-color: #c25350;
+}
+
