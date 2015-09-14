@@ -70,9 +70,11 @@ var proxySettings = {
 
 var psiphon = {
   connect: function () {
+    chrome.runtime.sendMessage({type: 'status', status: 'connecting'});
     nativeHost.postMessage({'psi':'connect'});
   },
   disconnect: function () {
+    chrome.runtime.sendMessage({type: 'status', status: 'disconnecting'});
     nativeHost.postMessage({'psi':'disconnect'});
   }
 };

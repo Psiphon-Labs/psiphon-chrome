@@ -1,41 +1,59 @@
 'use strict';
 
+function getUiElements () {
+  ui.logo.element = document.getElementById('logo-status');
+  ui.buttons.connect = document.getElementById('connect-button');
+  ui.buttons.disconnect = document.getElementById('disconnect-button');
+  ui.buttons.settings = document.getElementById('settings-button');
+}
+
+function resetButtonText () {
+  ui.buttons.connect.innerText = 'Connect';
+  ui.buttons.disconnect.innerText = 'Disconnect';
+}
+
 function isConnected() {
-  logoStatus.element.src = logoStatus.connectedSource;
-  document.getElementById('connect-button').style.display = 'none';
-  document.getElementById('disconnect-button').style.display = 'initial';
+  ui.logo.element.src = ui.logo.connectedImage;
+
+  resetButtonText();
+
+  ui.buttons.connect.style.display = 'none';
+  ui.buttons.disconnect.style.display = 'initial';
 }
 
 function isDisconnected() {
-  logoStatus.element.src = logoStatus.disconnectedSource;
-  document.getElementById('connect-button').style.display = 'initial';
-  document.getElementById('disconnect-button').style.display = 'none';
-}
+  ui.logo.element.src = ui.logo.disconnectedImage;
 
-function uiStateFromBackgroundPage () {
-  if (bgPage.connectionState.active) {
-    isConnected();
-  } else {
-    isDisconnected();
-  }
+  resetButtonText();
+
+  ui.buttons.connect.style.display = 'initial';
+  ui.buttons.disconnect.style.display = 'none';
 }
 
 var bgPage = chrome.extension.getBackgroundPage();
-var logoStatus = {
-  element: null,
-  connectedSource: '../img/logos/128.png',
-  disconnectedSource: '../img/logos/bw-128.png'
+var ui = {
+  buttons: {
+    connect: null,
+    disconnect: null,
+    settings: null
+  },
+  logo: {
+    element: null,
+    connectedImage: '../img/logos/128.png',
+    disconnectedImage: '../img/logos/bw-128.png'
+  }
 };
+
 
 chrome.runtime.onMessage.addListener(function (message) {
   if (typeof message !== 'undefined' && message) {
     if (message.type === 'status') {
       switch (message.status) {
         case 'connecting':
-          console.log('connecting');
+          ui.buttons.connect.innerText = 'Connecting...';
           break;
         case 'disconnecting':
-          console.log('disconnecting');
+          ui.buttons.disconnect.innerText = 'Disconnecting...';
           break;
         case 'connected':
           isConnected();
@@ -47,15 +65,22 @@ chrome.runtime.onMessage.addListener(function (message) {
           console.error('Unhandled "status" message of type "%s"', message.status);
           break;
       }
+    } else {
+      console.error('Unhandled "type" for message: "%s"', message.status);
     }
   }
 });
 
 document.addEventListener('DOMContentLoaded', function () {
-  logoStatus.element = document.getElementById('logo-status');
-  uiStateFromBackgroundPage();
+  getUiElements();
 
-  document.getElementById('connect-button').addEventListener('click', bgPage.psiphon.connect);
-  document.getElementById('disconnect-button').addEventListener('click', bgPage.psiphon.disconnect);
-  document.getElementById('settings-button').addEventListener('click', function () { chrome.runtime.openOptionsPage(); });
+  if (bgPage.connectionState.active) {
+    isConnected();
+  } else {
+    isDisconnected();
+  }
+
+  ui.buttons.connect.addEventListener('click', bgPage.psiphon.connect);
+  ui.buttons.disconnect.addEventListener('click', bgPage.psiphon.disconnect);
+  ui.buttons.settings.addEventListener('click', function () { chrome.runtime.openOptionsPage(); });
 });
