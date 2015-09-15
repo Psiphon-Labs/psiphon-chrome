@@ -1,6 +1,7 @@
 body {
   min-width: 200px;
   background-color: #eeeeee;
+  direction: __MSG_@@bidi_dir__;
 }
 
 #logo-status {
