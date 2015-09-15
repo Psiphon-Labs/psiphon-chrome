@@ -7,27 +7,44 @@ function getUiElements () {
   ui.buttons.settings = document.getElementById('settings-button');
 }
 
-function resetButtonText () {
-  ui.buttons.connect.innerText = 'Connect';
-  ui.buttons.disconnect.innerText = 'Disconnect';
+function initialButtonText () {
+  ui.buttons.connect.innerText = chrome.i18n.getMessage('popup_connect_button');
+  ui.buttons.disconnect.innerText = chrome.i18n.getMessage('popup_disconnect_button');
 }
 
-function isConnected() {
-  ui.logo.element.src = ui.logo.connectedImage;
+function updateUiState(state) {
+  switch (state) {
+    case 'connecting':
+      ui.buttons.connect.innerText = chrome.i18n.getMessage('popup_connecting_button');
+      ui.buttons.connect.disabled = true;
+      break;
+    case 'connected':
+      ui.logo.element.src = ui.logo.connectedImage;
 
-  resetButtonText();
+      initialButtonText();
 
-  ui.buttons.connect.style.display = 'none';
-  ui.buttons.disconnect.style.display = 'initial';
-}
+      ui.buttons.connect.style.display = 'none';
+      ui.buttons.disconnect.style.display = 'initial';
+      ui.buttons.disconnect.disabled = false;
 
-function isDisconnected() {
-  ui.logo.element.src = ui.logo.disconnectedImage;
+      break;
+    case 'disconnecting':
+      ui.buttons.disconnect.innerText = chrome.i18n.getMessage('popup_disconnecting_button');
+      ui.buttons.disconnect.disabled = true;
+      break;
+    case 'disconnected':
+      ui.logo.element.src = ui.logo.disconnectedImage;
 
-  resetButtonText();
+      initialButtonText();
 
-  ui.buttons.connect.style.display = 'initial';
-  ui.buttons.disconnect.style.display = 'none';
+      ui.buttons.connect.style.display = 'initial';
+      ui.buttons.disconnect.style.display = 'none';
+      ui.buttons.connect.disabled = false;
+
+      break;
+    default:
+      break;
+  }
 }
 
 var bgPage = chrome.extension.getBackgroundPage();
@@ -50,34 +67,35 @@ chrome.runtime.onMessage.addListener(function (message) {
     if (message.type === 'status') {
       switch (message.status) {
         case 'connecting':
-          ui.buttons.connect.innerText = 'Connecting...';
-          break;
-        case 'disconnecting':
-          ui.buttons.disconnect.innerText = 'Disconnecting...';
+          updateUiState('connecting');
           break;
         case 'connected':
-          isConnected();
+          updateUiState('connected');
+          break;
+        case 'disconnecting':
+          updateUiState('disconnecting');
           break;
         case 'disconnected':
-          isDisconnected();
+          updateUiState('disconnected');
           break;
         default:
-          console.error('Unhandled "status" message of type "%s"', message.status);
+          console.error(chrome.i18n.getMessage('error_unhandled_background_message_status'), message.status);
           break;
       }
     } else {
-      console.error('Unhandled "type" for message: "%s"', message.status);
+      console.error(chrome.i18n.getMessage('error_unhandled_background_message_type'), message);
     }
   }
 });
 
 document.addEventListener('DOMContentLoaded', function () {
   getUiElements();
+  initialButtonText();
 
   if (bgPage.connectionState.active) {
-    isConnected();
+    updateUiState('connected');
   } else {
-    isDisconnected();
+    updateUiState('disconnected');
   }
 
   ui.buttons.connect.addEventListener('click', bgPage.psiphon.connect);

@@ -2,9 +2,10 @@
   "manifest_version": 2,
   "name": "Psiphon",
   "short_name": "Psiphon",
-  "description": "Psiphon Circumvention System",
+  "description": "__MSG_extension_description__",
   "version": "0.0.2",
   "minimum_chrome_version": "40",
+  "default_locale": "en",
   "background": {
     "scripts": ["background.js"]
   },

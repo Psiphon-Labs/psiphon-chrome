@@ -37,20 +37,20 @@ var proxySettings = {
     if (proxySettings.initial) {
       chrome.proxy.settings.set({value: proxySettings.initial, scope: 'regular'}, function() {});
     } else {
-      console.warn('No initial settings to restore');
+      // No initial settings to restore
     }
   },
   forceToSystemProxy: function () {
-    chrome.proxy.settings.set({value: {mode: "system"}}, function() {});
+    chrome.proxy.settings.set({value: {mode: 'system'}}, function() {});
     proxySettings.storeCurrent()
   },
   set: function (port, bypassList) {
     if (typeof port === 'undefined') {
-      console.warn('proxySettings.set - port was undefined, defaulting to 1080');
+      console.warn(chrome.i18n.getMessage('proxy_settings_no_port'));
       port = 1080;
     }
     if (typeof bypassList === 'undefined') {
-      console.warn('proxySettings.set - bypassList was undefined, defaulting to []');
+      console.warn(chrome.i18n.getMessage('proxy_settings_no_bypass'));
       bypassList = [];
     }
 
@@ -114,8 +114,6 @@ function onNativeMessage(message) {
 }
 
 function tunnelAvailable() {
-  console.log('A tunnel is available, setting proxy');
-
   proxySettings.set(connectionState.proxies.socks, ['localhost']);
   chrome.runtime.sendMessage({type: 'status', status: 'connected'});
   chrome.browserAction.setIcon({path: 'img/logos/38.png'});
@@ -129,8 +127,6 @@ function tunnelAvailable() {
 }
 
 function noTunnelAvailable() {
-  console.log('No tunnel is available, resetting proxy');
-
   proxySettings.restoreInitial();
   chrome.runtime.sendMessage({type: 'status', status: 'disconnected'});
   chrome.browserAction.setIcon({path: 'img/logos/bw-38.png'});
@@ -143,10 +139,10 @@ proxySettings.storeCurrent();
 nativeHost = chrome.runtime.connectNative('ca.psiphon.chrome');
 nativeHost.onMessage.addListener(onNativeMessage);
 nativeHost.onDisconnect.addListener(function() {
-  logMessage('failed to connect to native host');
+  logMessage(chrome.i18n.getMessage('error_no_native_host_connection'));
   nativeHost = null;
 });
 
 chrome.proxy.onProxyError.addListener(function(error) {
-  logMessage('proxy error: ' + JSON.stringify(error));
+  logMessage(chrome.i18n.getMessage('error_cannot_change_proxy_settings'), JSON.stringify(error));
 });

@@ -1,4 +1,7 @@
-var bgPage = chrome.extension.getBackgroundPage();
+function getUiElements () {
+  ui.buttons.viewLogs = document.getElementById('view-logs-button');
+  ui.buttons.forceSystemProxy = document.getElementById('force-system-proxy-button');
+}
 
 function saveOptions () {
   chrome.storage.local.set({
@@ -26,9 +29,21 @@ function restoreOptions () {
   });
 }
 
+var bgPage = chrome.extension.getBackgroundPage();
+
+var ui = {
+  buttons: {
+    viewLogs: null,
+    forceSystemProxy: null
+  }
+}
+
 document.addEventListener('DOMContentLoaded', function() {
-  //restoreOptions();
-  //document.getElementById('save-button').addEventListener('click', saveOptions);
-  document.getElementById('view-logs-button').addEventListener('click', bgPage.viewLogs);
-  document.getElementById('force-system-proxy-button').addEventListener('click', bgPage.proxySettings.forceToSystemProxy);
+  getUiElements();
+
+  ui.buttons.viewLogs.innerText = chrome.i18n.getMessage('options_view_logs_button');
+  ui.buttons.forceSystemProxy.innerText = chrome.i18n.getMessage('options_force_system_proxy_button');
+
+  ui.buttons.viewLogs.addEventListener('click', bgPage.viewLogs);
+  ui.buttons.forceSystemProxy.addEventListener('click', bgPage.proxySettings.forceToSystemProxy);
 });

@@ -1,0 +1,16 @@
+{
+  "extension_description": {"message": "Psiphon Circumvention System"},
+  "options_view_logs_button": {"message": "View logs"},
+  "options_force_system_proxy_button": {"message": "Force Chrome back to system proxy"},
+  "popup_connect_button": {"message": "Connect"},
+  "popup_connecting_button": {"message": "Connecting..."},
+  "popup_disconnect_button": {"message": "Disconnect"},
+  "popup_disconnecting_button": {"message": "Disconnecting..."},
+  "warning_proxy_settings_no_port" : {"message": "proxySettings.set - port was undefined, defaulting to 1080"},
+  "warning_proxy_settings_no_bypass" : {"message": "proxySettings.set - bypassList was undefined, defaulting to []"},
+  "error_unhandled_background_message_status": {"message": "Unhandled 'status' message of type '%s'"},
+  "error_unhandled_background_message_type": {"message": "Unhandled 'type' for message: '%s'"},
+  "error_no_native_host_connection": {"message": "Could not connect to native messaging host"},
+  "error_cannot_change_proxy_settings" : {"message": "Proxy error: '%s'"}
+
+}
