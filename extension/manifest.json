@@ -3,7 +3,7 @@
   "name": "Psiphon",
   "short_name": "Psiphon",
   "description": "__MSG_extension_description__",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "minimum_chrome_version": "40",
   "default_locale": "en",
   "background": {
