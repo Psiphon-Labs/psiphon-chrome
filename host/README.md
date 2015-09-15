@@ -12,7 +12,7 @@ Create the build image:
 Run the build:
 
 ```bash
-docker run --rm -v $(pwd):/go/src/github.com/Psiphon-Labs/psiphon-chrome psichrome /bin/bash -c 'cd /go/src/github.com/Psiphon-Labs/psiphon-chrome && ./make.bash'
+docker run --rm -v $(pwd):/go/src/github.com/Psiphon-Labs/psiphon-chrome psichrome /bin/bash -c 'cd /go/src/github.com/Psiphon-Labs/psiphon-chrome/host && ./make.bash'
 ```
 
 When that command completes, the compiled binaries will be located in the current directory. The files will be named:
