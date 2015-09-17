@@ -7,7 +7,7 @@ Section "install"
     SetOutPath $INSTDIR
 
     # Drop the actual binary
-    File /oname=psiphon-native-messaging-host.exe ..\..\host\bin\windows\psiphon-native-messaging-host-i386.exe
+    File /oname=psiphon-native-messaging-host.exe ..\..\host\bin\windows\psiphon-native-messaging-host-i686.exe
 
     # Setup the manifest file
     File ..\..\host\ca.psiphon.chrome-win.json
@@ -25,7 +25,7 @@ Section "install"
     WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\PsiphonChrome" "DisplayName" "Psiphon for Chrome"
     WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\PsiphonChrome" "DisplayIcon" "$\"$INSTDIR\logo.ico$\""
     WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\PsiphonChrome" "Publisher" "Psiphon Inc."
-    WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\PsiphonChrome" "DisplayVersion" "0.0.1"
+    WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\PsiphonChrome" "DisplayVersion" "1"
     WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\PsiphonChrome" "UninstallString" "$\"$INSTDIR\uninstall.exe$\""
     WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\PsiphonChrome" "QuietUninstallString" "$\"$INSTDIR\uninstall.exe$\" /S"
     WriteRegDWORD HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\PsiphonChrome" "NoModify" 1

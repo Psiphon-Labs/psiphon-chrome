@@ -4,7 +4,7 @@ BASE_PATH="$( cd "$(dirname "$0")/../" ; pwd -P )"
 cd $BASE_PATH
 
 NAME="psiphon-chrome"
-VERSION="0.0.1"
+VERSION="1"
 VENDOR="Psiphon Inc."
 MAINTAINER="Psiphon Inc. <info@psiphon.ca>"
 URL="https://psiphon3.com"
@@ -69,6 +69,13 @@ EOF
 }
 
 package_for_linux () {
+  echo "....Checking for FPM in PATH"
+  which fpm > /dev/null
+  if [ $? != 0 ]; then
+    echo ".....FPM not found in PATH, cannot create Linux installers, skipping"
+    return 1
+  fi
+
   #BUILD_ARCHITECHTURES=( "x86_64" "i686" )
   BUILD_ARCHITECHTURES=( "i686" )
   BUILD_TARGETS=( "deb" "rpm" )
@@ -92,9 +99,17 @@ package_for_linux () {
       /tmp/${EXTENSION_ID}.json=/opt/PsiphonChrome/${EXTENSION_ID}.json
     done
   done
+
+  mv *.rpm ./dist/
+  mv *.deb ./dist/
 }
 
 package_for_osx () {
+  if [ $(uname -s) != "Darwin" ]; then
+    echo "....Packaging for OSX can only happen on an OSX machine, skipping"
+    return 1
+  fi
+
   # Create uninstall.pkg to clean everything up
   fpm \
   -s empty \
@@ -124,10 +139,23 @@ package_for_osx () {
   host/bin/darwin/$EXECUTABLE_NAME-x86_64=/opt/PsiphonChrome/$EXECUTABLE_NAME \
   host/$MANIFEST_FILE=/opt/PsiphonChrome/$MANIFEST_FILE \
   /tmp/${EXTENSION_ID}.json=/opt/PsiphonChrome/${EXTENSION_ID}.json \
-  $NAME-uninstall-${VERSION}.pkg=/opt/PsiphonChrome/
+  $NAME-uninstall-${VERSION}.pkg=/opt/PsiphonChrome/uninstall.pkg
 
   # Uninstaller is packaged into installer and dropped in /opt/PsiphonChrome, remove this redundant one
   rm $NAME-uninstall-${VERSION}.pkg
+  mv *.pkg ./dist/
+}
+
+package_for_windows () {
+  echo "....Checking for NSIS in PATH"
+  which makensis > /dev/null
+  if [ $? != 0 ]; then
+    echo ".....NSIS not found in PATH, cannot create Windows installer, skipping"
+    return 1
+  fi
+
+  makensis tools/nsis/nsis-generate.nsi
+  mv tools/nsis/*.exe ./dist/
 }
 
 echo "Starting package creation at $(date)"
@@ -138,6 +166,10 @@ echo "..Creating post-installation script"
 create_after_install
 echo "..Creating post-uninstallation script"
 create_after_remove
+echo "..Ensuring availablity of 'dist' directory for installers"
+if [ ! -d dist ]; then
+  mkdir dist
+fi
 
 echo "Beginning target selection"
 TARGET=$1
@@ -150,18 +182,27 @@ case $TARGET in
     echo "..'osx' selected. Packaging"
     package_for_osx
     ;;
+  windows)
+    echo "..'windows' selected. Packaging"
+    package_for_windows
+    ;;
   all)
     echo "..'all' selected. Packaging"
     echo "...Linux"
     package_for_linux
     echo "...OSX"
     package_for_osx
+    echo "...Windows"
+    package_for_windows
     ;;
   *)
-    echo "Invalid target. 'linux', 'osx', and 'all' are the only currently supported targets. Passed target was: '${TARGET}', aborting"
+    echo "Invalid target. 'linux', 'osx', 'windows' and 'all' are the only supported targets. Passed target was: '${TARGET}', aborting"
     exit 1
     ;;
 esac
+
+echo "..Setting execuatable bit on installers"
+chmod -R +x dist/*
 
 echo "..Cleaning up temporary files packaged into installers"
 rm /tmp/${EXTENSION_ID}.json
