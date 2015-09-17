@@ -4,7 +4,6 @@
   "path": "psiphon-native-messaging-host.exe",
   "type": "stdio",
   "allowed_origins": [
-    "chrome-extension://gnalljkfdmkhinjcipgjjehclbpagega/",
-    "chrome-extension://gmjcfdpikhccadldjdagaehblacjchnd/"
+    "chrome-extension://gnalljkfdmkhinjcipgjjehclbpagega/"
   ]
 }
