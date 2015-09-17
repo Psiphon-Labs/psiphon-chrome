@@ -121,16 +121,16 @@ func runPsiphon() {
 		os.Exit(1)
 	}
 
-	// TODO: There is probably a much better way of doing this...
-	// The CWD of this file when launched by Chrome will be the Chrome install's directory
-	// As a non-administrative user, you cannot write files to this directory.
-	// No files means no sqlite db, and therefore no tunnel-core.
 	if runtime.GOOS == "windows" {
 		config.DataStoreDirectory = os.Getenv("APPDATA") + "\\PsiphonChrome"
+		config.ClientPlatform += "_windows"
+	} else if runtime.GOOS == "darwin" {
+		config.ClientPlatform += "_mac"
+	} else if runtime.GOOS == "linux" {
+		config.ClientPlatform += "_linux"
 	} else {
-		config.DataStoreDirectory = "/opt/PsiphonChrome"
+		config.ClientPlatform += "_other"
 	}
-	psiphon.NoticeInfo("config.DataStoreDirectory = %s", config.DataStoreDirectory)
 	// }}}
 
 	// {{{ Initialize data store

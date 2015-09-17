@@ -5,14 +5,7 @@ var PSIPHON_CONFIG = []byte(`{
 	"SponsorId" : "0",
 	"RemoteServerListUrl" : "https://s3.amazonaws.com/invalid_bucket_name/server_list",
 	"RemoteServerListSignaturePublicKey" : "",
-	"LogFilename" : "",
   "DataStoreDirectory": "",
-	"DataStoreFilename" : "",
-	"LocalHttpProxyPort" : 0,
-	"LocalSocksProxyPort" : 0,
-	"EgressRegion" : "",
-	"TunnelProtocol" : "",
-	"ConnectionWorkerPoolSize" : 10,
-	"TunnelPoolSize" : 1,
-	"EstablishTunnelTimeoutSeconds" : 10
+  "ClientVersion": 0,
+  "ClientPlatform": "chrome"
 }`)
