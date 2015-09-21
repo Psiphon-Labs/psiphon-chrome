@@ -17,16 +17,16 @@ LDFLAGS="\
 -X github.com/Psiphon-Labs/psiphon-tunnel-core/psiphon.buildRev=$BUILDREV \
 "
 
-echo "Variables for LDFLAGS:"
-echo " Build Date: ${BUILDDATE}"
-echo " Build Repo: ${BUILDREPO}"
-echo " Build Revision: ${BUILDREV}"
+echo "Variables for ldflags:"
+echo " Build date: ${BUILDDATE}"
+echo " Build repo: ${BUILDREPO}"
+echo " Build revision: ${BUILDREV}"
+echo ""
 
-echo "Getting project dependencies (via go get)"
+echo "getting project dependencies (via go get)"
 GOOS=linux go get -d ./...
 GOOS=windows go get -d ./...
 GOOS=darwin go get -d ./...
-
 
 echo "Setting up 'bin' directory for compiled binaries"
 if [ ! -d bin ]; then
@@ -64,7 +64,7 @@ echo "Not Building linux-x86_64..."
 #gox -verbose -ldflags "$LDFLAGS" -osarch linux/amd64 -output bin/linux/${EXE_BASENAME}-x86_64
 #goupx --best bin/linux/${EXE_BASENAME}-x86_64
 
-echo "\nBuilding darwin-x86_64..."
+echo "Building darwin-x86_64..."
 gox -verbose -ldflags "$LDFLAGS" -osarch darwin/amd64 -output bin/darwin/${EXE_BASENAME}-x86_64
 # Darwin binaries don't seem to be UPXable when built this way
 

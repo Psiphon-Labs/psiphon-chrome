@@ -1,4 +1,4 @@
-# Dockerfile to build an image with the local version of psiphon-tunnel-core.
+# Dockerfile to build an image with the local version of psiphon-native-messaging-host
 #
 # See README.md for usage instructions.
 
