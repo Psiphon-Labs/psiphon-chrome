@@ -9,7 +9,7 @@ fi
 EXE_BASENAME="psiphon-native-messaging-host"
 BUILDDATE=$(date --iso-8601=seconds)
 BUILDREPO=$(git config --get remote.origin.url)
-BUILDREV=$(git rev-parse HEAD)
+BUILDREV=$(git rev-parse --short HEAD)
 
 LDFLAGS="\
 -X github.com/Psiphon-Labs/psiphon-tunnel-core/psiphon.buildDate=$BUILDDATE \

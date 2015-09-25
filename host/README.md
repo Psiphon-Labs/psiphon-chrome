@@ -15,13 +15,22 @@ Run the build:
 docker run --rm -v $(pwd):/go/src/github.com/Psiphon-Labs/psiphon-chrome psichrome /bin/bash -c 'cd /go/src/github.com/Psiphon-Labs/psiphon-chrome/host && ./make.bash'
 ```
 
-When that command completes, the compiled binaries will be located in the current directory. The files will be named:
- - `psiphon-native-messaging-host.exe` (for Windows)
- - `psiphon-native-messaging-host` (for Linux)
+When that command completes, the compiled binaries will be located in the `bin` directory under the current directory. The file structure is as follows:
+
+  ```
+  bin
+  ├── darwin
+  │   └── psiphon-native-messaging-host-x86_64
+  ├── linux
+  │   └── psiphon-native-messaging-host-i686
+  └── windows
+      └── psiphon-native-messaging-host-i686.exe
+
+  ```
 
 If attempting to install the extension along with the now built native messaging host, return to the instructions in the [main README](../README.md))
 
 ### Configuration
 In order to configure the build, copy `embedded_values.go.stub` to `embedded_values.go` and fill in the appropriate data (requires a Psiphon-like network)
- - Of particular note, ensure that the DataStoreDirectory is set to a path that is readable and writable by the user that will be using the software.
+ - Of particular note, ensure that the `DataStoreDirectory` is set to a path that is readable and writable by the user that will be using the software.
    - On Windows, this defaults to `%APPDATA%\PsiphonChrome`
