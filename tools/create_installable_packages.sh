@@ -5,10 +5,12 @@ cd $BASE_PATH
 
 NAME="psiphon-chrome"
 VERSION="1"
+ITERATION="2"
 VENDOR="Psiphon Inc."
 MAINTAINER="Psiphon Inc. <info@psiphon.ca>"
+LICENSE="GPL-3"
 URL="https://psiphon3.com"
-DESCRIPTION="Chrome Native Messaging Host and Extension for using the Psiphon Circumvention System from within the browser"
+DESCRIPTION="Use the Psiphon Circumvention System from within the Chrome browser!"
 EXTENSION_ID="gnalljkfdmkhinjcipgjjehclbpagega"
 
 MANIFEST_FILE="ca.psiphon.chrome.json"
@@ -23,7 +25,11 @@ EOF
 create_after_install () {
   cat << EOF > /tmp/after_install.sh
 #!/bin/bash
-chmod -R a+rwx /opt/PsiphonChrome
+set -e
+
+if [ -d /opt/PsiphonChrome ]; then
+  chmod -R a+rwx /opt/PsiphonChrome
+fi
 
 if [ \$(uname -s) = "Linux" ]; then
   MANIFEST_DESTINATION=\$HOME/.config/google-chrome/NativeMessagingHosts
@@ -52,6 +58,7 @@ EOF
 create_after_remove () {
   cat << EOF > /tmp/after_remove.sh
 #!/bin/bash
+set -e
 
 if [ \$(uname -s) = "Linux" ]; then
   MANIFEST_DESTINATION=\$HOME/.config/google-chrome/NativeMessagingHosts
@@ -61,9 +68,15 @@ elif [ \$(uname -s) = "Darwin" ]; then
   UPDATE_FILE_DESTINATION="\${HOME}/Library/Application Support/Google/Chrome/External Extensions"
 fi
 
-rm "\${MANIFEST_DESTINATION}/${MANIFEST_FILE}"
-rm "\${UPDATE_FILE_DESTINATION}/${EXTENSION_ID}.json"
-rm -rf /opt/PsiphonChrome
+if [ -f \${MANIFEST_DESTINATION}/\${MANIFEST_FILE} ]; then
+  rm "\${MANIFEST_DESTINATION}/\${MANIFEST_FILE}"
+fi
+if [ -f \${UPDATE_FILE_DESTINATION}/\${EXTENSION_ID}.json ]; then
+  rm "\${UPDATE_FILE_DESTINATION}/\${EXTENSION_ID}.json"
+fi
+if [ -d /opt/PsiphonChrome ]; then
+  rm -rf /opt/PsiphonChrome
+fi
 
 EOF
 }
@@ -90,10 +103,14 @@ package_for_linux () {
       --after-remove /tmp/after_remove.sh \
       --architecture all \
       --version $VERSION \
+      --iteration $ITERATION \
       --vendor "$VENDOR" \
       --maintainer "$MAINTAINER" \
+      --license "$LICENSE" \
       --url "$URL" \
       --description "${DESCRIPTION}" \
+      --category "web" \
+      --depends "google-chrome-beta|google-chrome-stable|google-chrome-unstable" \
       host/bin/linux/$EXECUTABLE_NAME-$ARCH=/opt/PsiphonChrome/$EXECUTABLE_NAME \
       host/$MANIFEST_FILE=/opt/PsiphonChrome/$MANIFEST_FILE \
       /tmp/${EXTENSION_ID}.json=/opt/PsiphonChrome/${EXTENSION_ID}.json
@@ -119,8 +136,10 @@ package_for_osx () {
   --osxpkg-payload-free \
   --before-install /tmp/after_remove.sh \
   --version $VERSION \
+  --iteration $ITERATION \
   --vendor "$VENDOR" \
   --maintainer "$MAINTAINER" \
+  --license "$LICENSE" \
   --url "$URL" \
   --description "Uninstaller - ${DESCRIPTION}"
 
@@ -132,8 +151,10 @@ package_for_osx () {
   --no-osxpkg-payload-free \
   --after-install /tmp/after_install.sh \
   --version $VERSION \
+  --iteration $ITERATION \
   --vendor "$VENDOR" \
   --maintainer "$MAINTAINER" \
+  --license "$LICENSE" \
   --url "$URL" \
   --description "${DESCRIPTION}" \
   host/bin/darwin/$EXECUTABLE_NAME-x86_64=/opt/PsiphonChrome/$EXECUTABLE_NAME \
