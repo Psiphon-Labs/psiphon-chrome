@@ -1,5 +1,3 @@
-var bgPage = chrome.extension.getBackgroundPage();
-
 function saveOptions () {
   chrome.storage.local.set({
     // Settings object to save
@@ -26,9 +24,5 @@ function restoreOptions () {
   });
 }
 
-document.addEventListener('DOMContentLoaded', function() {
-  //restoreOptions();
-  //document.getElementById('save-button').addEventListener('click', saveOptions);
-  document.getElementById('view-logs-button').addEventListener('click', bgPage.viewLogs);
-  document.getElementById('force-system-proxy-button').addEventListener('click', bgPage.proxySettings.forceToSystemProxy);
-});
+document.addEventListener('DOMContentLoaded', restoreOptions);
+document.getElementById('save').addEventListener('click', saveOptions);
